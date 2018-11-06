@@ -1,20 +1,41 @@
 import 'package:flutter/material.dart';
 
+import './pages/albumDetail.dart';
+import './domain/album.dart';
+
 class Albums extends StatelessWidget {
   // Constructor
-  Albums([this.albums = const []]) {}
+  Albums(this.albums, {this.onDeleteFunc}) {}
 
   // Properties
-  final List<String>
-      albums; // value of the property will not change after setting
+  final List<Album>  albums; // value of the property will not change after setting
+  final Function onDeleteFunc;
 
   // Helper Methods
   Widget _buildAlbumItem(BuildContext context, int index) {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset('assets/744857.jpg'),
-          Text(albums[index]),
+          Image.asset(albums[index].imageUrl),
+          Text(albums[index].title),
+          ButtonBar(
+            alignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Details'),
+                onPressed: () => Navigator.push<bool>(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => AlbumDetailPage(albums[index]),
+                      ),
+                    ).then((bool value) {
+                        if(value!= null && value){
+                          onDeleteFunc(index);
+                        }
+                    }),
+              )
+            ],
+          )
         ],
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './albums_manager.dart';
+import './pages/auth.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,13 +15,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           brightness: Brightness.light,
           primarySwatch: Colors.indigo,
-          accentColor: Colors.deepPurple),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Albums'),
-        ),
-        body: AlbumsManager(),
-      ),
+          accentColor: Colors.tealAccent),
+      home: AuthPage(),
     );
   }
 }

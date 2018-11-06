@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import './albums.dart';
 import './album_control.dart';
+import './domain/album.dart';
 
 class AlbumsManager extends StatefulWidget {
   // Constructor
   AlbumsManager({this.initialAlbum});
 
   //Properties
-  final String initialAlbum;
+  final Album initialAlbum;
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +18,7 @@ class AlbumsManager extends StatefulWidget {
 }
 
 class _AlbumsManagerState extends State<AlbumsManager> {
-  List<String> _albums = [];
+  List<Album> _albums = [];
 
   // parent State methods
   @override
@@ -30,9 +31,15 @@ class _AlbumsManagerState extends State<AlbumsManager> {
     super.initState();
   }
 
-  void _addAlbum(String album) {
+  void _addAlbum(Album album) {
     setState(() {
       _albums.add(album);
+    });
+  }
+
+  void _deleteAlbum(int index) {
+    setState(() {
+      _albums.removeAt(index);
     });
   }
 
@@ -44,7 +51,7 @@ class _AlbumsManagerState extends State<AlbumsManager> {
           margin: EdgeInsets.all(10.0),
           child: AlbumControl(onPressFunc: _addAlbum),
         ),
-        Expanded(child: Albums(_albums)),
+        Expanded(child: Albums(_albums, onDeleteFunc: this._deleteAlbum)),
       ],
     );
   }
