@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import './albums.dart';
+import './album_control.dart';
 
 class AlbumsManager extends StatefulWidget {
-
   // Constructor
-  AlbumsManager(this.initialAlbum);
+  AlbumsManager({this.initialAlbum = 'Fearless'});
 
   //Properties
   final String initialAlbum;
@@ -21,10 +21,16 @@ class _AlbumsManagerState extends State<AlbumsManager> {
 
   // parent State methods
   @override
-    void initState() {
-      _albums.add(widget.initialAlbum);
-      super.initState();
-    }
+  void initState() {
+    _albums.add(widget.initialAlbum);
+    super.initState();
+  }
+
+  void _addAlbum(String album) {
+    setState(() {
+      _albums.add(album);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +38,7 @@ class _AlbumsManagerState extends State<AlbumsManager> {
       children: [
         Container(
           margin: EdgeInsets.all(10.0),
-          child: RaisedButton(
-            onPressed: () {
-              setState(() {
-                _albums.add('Reputation');
-              });
-            },
-            child: Text('Add Album'),
-          ),
+          child: AlbumControl(onPressFunc: _addAlbum),
         ),
         Albums(_albums),
       ],

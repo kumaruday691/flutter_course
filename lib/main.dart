@@ -12,13 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: Text('Albums'),
+      theme: ThemeData(
+          brightness: Brightness.light,
+          primarySwatch: Colors.indigo,
+          accentColor: Colors.deepPurple),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Albums'),
+        ),
+        body: AlbumsManager(initialAlbum: 'Red'),
       ),
-      
-      body: AlbumsManager('Red'),
-    ),
     );
   }
 }
