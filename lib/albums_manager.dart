@@ -5,7 +5,7 @@ import './album_control.dart';
 
 class AlbumsManager extends StatefulWidget {
   // Constructor
-  AlbumsManager({this.initialAlbum = 'Fearless'});
+  AlbumsManager({this.initialAlbum});
 
   //Properties
   final String initialAlbum;
@@ -22,7 +22,11 @@ class _AlbumsManagerState extends State<AlbumsManager> {
   // parent State methods
   @override
   void initState() {
-    _albums.add(widget.initialAlbum);
+    // guard clause
+    if (widget.initialAlbum != null) {
+      _albums.add(widget.initialAlbum);
+    }
+
     super.initState();
   }
 
@@ -40,7 +44,7 @@ class _AlbumsManagerState extends State<AlbumsManager> {
           margin: EdgeInsets.all(10.0),
           child: AlbumControl(onPressFunc: _addAlbum),
         ),
-        Albums(_albums),
+        Expanded(child: Albums(_albums)),
       ],
     );
   }

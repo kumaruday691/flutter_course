@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text('Albums'),
         ),
-        body: AlbumsManager(initialAlbum: 'Red'),
+        body: AlbumsManager(),
       ),
     );
   }
