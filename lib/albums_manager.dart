@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import './albums.dart';
 
 class AlbumsManager extends StatefulWidget {
+
+  // Constructor
+  AlbumsManager(this.initialAlbum);
+
+  //Properties
+  final String initialAlbum;
+
   @override
   State<StatefulWidget> createState() {
     return _AlbumsManagerState();
@@ -10,7 +17,14 @@ class AlbumsManager extends StatefulWidget {
 }
 
 class _AlbumsManagerState extends State<AlbumsManager> {
-  List<String> _albums = ['Red'];
+  List<String> _albums = [];
+
+  // parent State methods
+  @override
+    void initState() {
+      _albums.add(widget.initialAlbum);
+      super.initState();
+    }
 
   @override
   Widget build(BuildContext context) {

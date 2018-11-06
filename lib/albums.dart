@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 class Albums extends StatelessWidget {
 
   // Constructor
-  Albums(this.albums);
+  Albums(this.albums){
+    
+  }
 
   // Properties
   final List<String> albums; // value of the property will not change after setting

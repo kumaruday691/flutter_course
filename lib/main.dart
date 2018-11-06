@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         title: Text('Albums'),
       ),
       
-      body: AlbumsManager(),
+      body: AlbumsManager('Red'),
     ),
     );
   }
