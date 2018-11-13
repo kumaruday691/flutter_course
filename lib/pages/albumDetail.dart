@@ -9,6 +9,28 @@ class AlbumDetailPage extends StatelessWidget {
   //Properties
   final Album album;
 
+  Widget _showAlertDialogWhilstDelete(BuildContext context) {
+    return AlertDialog(
+      title: Text('Are you sure?'),
+      content: Text('This action cannot be undone'),
+      actions: <Widget>[
+        FlatButton(
+          child: Text('YES'),
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pop(context, true);
+          },
+        ),
+        FlatButton(
+          child: Text('NO'),
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -31,7 +53,11 @@ class AlbumDetailPage extends StatelessWidget {
                 RaisedButton(
                   color: Theme.of(context).accentColor,
                   onPressed: () {
-                    Navigator.pop(context, true);
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return _showAlertDialogWhilstDelete(context);
+                        });
                   },
                   child: Text('Delete'),
                 )

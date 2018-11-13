@@ -23,12 +23,8 @@ class Albums extends StatelessWidget {
             children: <Widget>[
               FlatButton(
                 child: Text('Details'),
-                onPressed: () => Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => AlbumDetailPage(albums[index]),
-                      ),
-                    ).then((bool value) {
+                onPressed: () => Navigator.pushNamed<bool>(context, '/album/' + index.toString())
+                .then((bool value) {
                         if(value!= null && value){
                           onDeleteFunc(index);
                         }
