@@ -71,10 +71,15 @@ class Albums extends StatelessWidget {
           ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
-              FlatButton(
-                  child: Text('Details'),
+              IconButton(
+                  icon: Icon(Icons.details,color: Colors.indigo,),
                   onPressed: () => Navigator.pushNamed<bool>(
-                      context, '/album/' + index.toString()))
+                      context, '/album/' + index.toString())),
+              
+              IconButton(
+                  icon: Icon(Icons.favorite_border,color: Colors.pink,),
+                  onPressed: () {})
+
             ],
           )
         ],

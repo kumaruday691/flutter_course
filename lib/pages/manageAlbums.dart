@@ -4,12 +4,10 @@ import './listAlbums.dart';
 import './createAlbum.dart';
 
 class ManageAlbumsPage extends StatelessWidget {
-
   final Function addAlbum;
   final Function deleteAlbum;
 
   ManageAlbumsPage(this.addAlbum, this.deleteAlbum);
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +22,7 @@ class ManageAlbumsPage extends StatelessWidget {
               title: Text('Navigate'),
             ),
             ListTile(
+              leading: Icon(Icons.album),
               title: Text('All Albums'),
               onTap: () {
                 Navigator.pushReplacementNamed(context, '/albums');

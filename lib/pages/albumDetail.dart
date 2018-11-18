@@ -41,6 +41,19 @@ class AlbumDetailPage extends StatelessWidget {
         child: Scaffold(
             appBar: AppBar(
               title: Text(album.title),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.delete_forever, size: 35,),
+                  color: Colors.white,
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return _showAlertDialogWhilstDelete(context);
+                        });
+                  },
+                )
+              ],
             ),
             body: Center(
                 child: Column(
@@ -49,18 +62,12 @@ class AlbumDetailPage extends StatelessWidget {
                 Image.asset(album.imageUrl),
                 Container(
                     padding: EdgeInsets.all(10.0),
-                    child: Text(album.description)),
-                RaisedButton(
-                  color: Theme.of(context).accentColor,
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return _showAlertDialogWhilstDelete(context);
-                        });
-                  },
-                  child: Text('Delete'),
-                )
+                    child: Column(
+                      children: <Widget>[
+                        Text(album.title),
+                        Text(album.description),
+                        ],
+                    )),
               ],
             ))));
   }

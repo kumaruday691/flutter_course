@@ -5,7 +5,6 @@ import '../albums_manager.dart';
 import './manageAlbums.dart';
 
 class ShowAlbumsPage extends StatelessWidget {
-
   final List<Album> albums;
 
   ShowAlbumsPage(this.albums);
@@ -21,6 +20,7 @@ class ShowAlbumsPage extends StatelessWidget {
             title: Text('Navigate'),
           ),
           ListTile(
+            leading: Icon(Icons.mode_edit),
             title: Text('Manage Albums'),
             onTap: () {
               Navigator.pushReplacementNamed(context, '/admin');
@@ -30,6 +30,12 @@ class ShowAlbumsPage extends StatelessWidget {
       )),
       appBar: AppBar(
         title: Text('Albums'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {},
+          )
+        ],
       ),
       body: AlbumsManager(albums),
     );
