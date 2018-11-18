@@ -43,8 +43,9 @@ class _MyAppState extends State<MyApp> {
           accentColor: Colors.tealAccent),
       //home: AuthPage(),
       routes: {
-        '/': (context) => ShowAlbumsPage(_albums, _addAlbum, _deleteAlbum),
-        '/admin': (context) => ManageAlbumsPage(),
+        '/': (context) => AuthPage(),
+        '/albums': (context) => ShowAlbumsPage(_albums),
+        '/admin': (context) => ManageAlbumsPage(_addAlbum, _deleteAlbum),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
@@ -63,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
             builder: (context) =>
-                ShowAlbumsPage(_albums, _addAlbum, _deleteAlbum));
+                ShowAlbumsPage(_albums));
       },
     );
   }

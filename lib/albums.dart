@@ -5,11 +5,10 @@ import './domain/album.dart';
 
 class Albums extends StatelessWidget {
   // Constructor
-  Albums(this.albums, {this.onDeleteFunc}) {}
+  Albums(this.albums) {}
 
   // Properties
   final List<Album>  albums; // value of the property will not change after setting
-  final Function onDeleteFunc;
 
   // Helper Methods
   Widget _buildAlbumItem(BuildContext context, int index) {
@@ -24,11 +23,6 @@ class Albums extends StatelessWidget {
               FlatButton(
                 child: Text('Details'),
                 onPressed: () => Navigator.pushNamed<bool>(context, '/album/' + index.toString())
-                .then((bool value) {
-                        if(value!= null && value){
-                          onDeleteFunc(index);
-                        }
-                    }),
               )
             ],
           )

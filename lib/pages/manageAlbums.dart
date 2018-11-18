@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
-import './showAlbums.dart';
 import './listAlbums.dart';
 import './createAlbum.dart';
 
 class ManageAlbumsPage extends StatelessWidget {
+
+  final Function addAlbum;
+  final Function deleteAlbum;
+
+  ManageAlbumsPage(this.addAlbum, this.deleteAlbum);
+
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -20,7 +26,7 @@ class ManageAlbumsPage extends StatelessWidget {
             ListTile(
               title: Text('All Albums'),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/');
+                Navigator.pushReplacementNamed(context, '/albums');
               },
             )
           ],
@@ -42,7 +48,7 @@ class ManageAlbumsPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            CreateAlbumPage(),
+            CreateAlbumPage(addAlbum, deleteAlbum),
             ListAlbumPage(),
           ],
         ),

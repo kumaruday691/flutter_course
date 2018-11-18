@@ -7,14 +7,11 @@ import './manageAlbums.dart';
 class ShowAlbumsPage extends StatelessWidget {
 
   final List<Album> albums;
-  final Function addAlbum;
-  final Function delteAlbum;
 
-  ShowAlbumsPage(this.albums, this.addAlbum, this.delteAlbum);
+  ShowAlbumsPage(this.albums);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       drawer: Drawer(
           child: Column(
@@ -34,7 +31,7 @@ class ShowAlbumsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Albums'),
       ),
-      body: AlbumsManager(albums, addAlbum, delteAlbum),
+      body: AlbumsManager(albums),
     );
   }
 }
