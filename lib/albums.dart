@@ -24,22 +24,28 @@ class Albums extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                albums[index].title,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  albums[index].title,
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                ),
               ),
               SizedBox(
                 width: 50,
               ),
               Container(
-                margin: EdgeInsets.all(10),
+                  margin: EdgeInsets.all(10),
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
                       color: Theme.of(context).accentColor,
                       borderRadius: BorderRadius.circular(10)),
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.monetization_on, color: Colors.indigo,),
+                      Icon(
+                        Icons.monetization_on,
+                        color: Colors.indigo,
+                      ),
                       SizedBox(
                         width: 10,
                       ),
