@@ -20,11 +20,18 @@ class _CreateAlbumPageState extends State<CreateAlbumPage> {
   String _description = "";
   double _price = 0;
 
+
   @override
   Widget build(BuildContext context) {
+
+    final double deviceWidth = MediaQuery.of(context).size.width;
+    final double targetWidth =  deviceWidth> 550 ? 500 : deviceWidth * 0.95; 
+    final double targetpadding = deviceWidth - targetWidth;
+
     return Container(
       margin: EdgeInsets.all(10.0),
       child: ListView(
+      padding: EdgeInsets.symmetric(horizontal: targetpadding/2),
       children: <Widget>[
         TextField(
           decoration: InputDecoration(labelText: "Album Title", prefixIcon: Icon(Icons.title)),
