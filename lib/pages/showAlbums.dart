@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../domain/album.dart';
-import '../albums_manager.dart';
-import './manageAlbums.dart';
+import '../widgets/albums.dart';
 
 class ShowAlbumsPage extends StatelessWidget {
   final List<Album> albums;
@@ -37,7 +36,7 @@ class ShowAlbumsPage extends StatelessWidget {
           )
         ],
       ),
-      body: AlbumsManager(albums),
+      body: Albums(albums),
     );
   }
 }

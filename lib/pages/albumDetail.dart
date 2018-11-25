@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/widgets/priceTag.dart';
 
 import '../domain/album.dart';
 
@@ -66,6 +67,7 @@ class AlbumDetailPage extends StatelessWidget {
                       children: <Widget>[
                         Text(album.title),
                         Text(album.description),
+                        PriceTag(album.price.toString()),
                         ],
                     )),
               ],
