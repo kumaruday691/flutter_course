@@ -4,9 +4,6 @@ import '../domain/album.dart';
 import '../widgets/albums.dart';
 
 class ShowAlbumsPage extends StatelessWidget {
-  final List<Album> albums;
-
-  ShowAlbumsPage(this.albums);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,7 @@ class ShowAlbumsPage extends StatelessWidget {
           )
         ],
       ),
-      body: Albums(albums),
+      body: Albums(),
     );
   }
 }

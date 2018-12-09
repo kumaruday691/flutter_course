@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/albumCard.dart';
 import '../domain/album.dart';
+import '../scopedModels/albums.dart';
 
 class Albums extends StatelessWidget {
-  // Constructor
-  Albums(this.albums) {}
-
-  // Properties
-  final List<Album>
-      albums; // value of the property will not change after setting
 
   // Helper Methods
-  Widget _renderItemIfApplicable() {
+  Widget _renderItemIfApplicable(List<Album> albums) {
     // guard clause
     if (albums.length == 0) {
       return Center(
@@ -29,6 +25,8 @@ class Albums extends StatelessWidget {
   // override build Method
   @override
   Widget build(BuildContext context) {
-    return _renderItemIfApplicable();
+    return ScopedModelDescendant<AlbumsModel>(builder: (context, widget, model) {
+      return _renderItemIfApplicable(model.albums); 
+    },); 
   }
 }

@@ -2,16 +2,8 @@ import 'package:flutter/material.dart';
 
 import './listAlbums.dart';
 import './editAlbum.dart';
-import '../domain/album.dart';
 
 class ManageAlbumsPage extends StatelessWidget {
-  final Function addAlbum;
-  final Function deleteAlbum;
-  final Function updateAlbum;
-  final List<Album> albums;
-
-  ManageAlbumsPage(this.addAlbum, this.deleteAlbum, this.updateAlbum, this.albums);
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -50,8 +42,8 @@ class ManageAlbumsPage extends StatelessWidget {
         ),
         body: TabBarView(
           children: <Widget>[
-            EditAlbumPage(addAlbum:addAlbum, deleteAlbum:deleteAlbum),
-            ListAlbumPage(albums, updateAlbum, deleteAlbum),
+            EditAlbumPage(),
+            ListAlbumPage(),
           ],
         ),
       ),

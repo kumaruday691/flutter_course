@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../domain/album.dart';
+import '../scopedModels/albums.dart';
 
 class EditAlbumPage extends StatefulWidget {
-  final Function addAlbum;
-  final Function deleteAlbum;
-  final Function updateAlbum;
-  final Album editAlbum;
-  final int albumIndex;
-
-  EditAlbumPage(
-      {this.addAlbum, this.deleteAlbum, this.editAlbum, this.updateAlbum, this.albumIndex});
-
   @override
   State<StatefulWidget> createState() {
     return _EditAlbumPageState();
@@ -23,12 +16,12 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
       title: "", description: "", price: 0.0, imageUrl: 'assets/744857.jpg');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPageContent(BuildContext context, Album editAlbum) {
     final double deviceWidth = MediaQuery.of(context).size.width;
     final double targetWidth = deviceWidth > 550 ? 500 : deviceWidth * 0.95;
     final double targetpadding = deviceWidth - targetWidth;
-    final Widget pageContent = GestureDetector(
+
+    return GestureDetector(
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode());
       },
@@ -42,8 +35,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
               TextFormField(
                 decoration: InputDecoration(
                     labelText: "Album Title", prefixIcon: Icon(Icons.title)),
-                initialValue:
-                    widget.editAlbum == null ? '' : widget.editAlbum.title,
+                initialValue: editAlbum == null ? '' : editAlbum.title,
                 validator: (String value) {
                   if (value.isEmpty || value.length < 5) {
                     return 'Title is required and should be atleast 5 character long';
@@ -59,9 +51,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                 decoration: InputDecoration(
                     labelText: "Album Description",
                     prefixIcon: Icon(Icons.description)),
-                initialValue: widget.editAlbum == null
-                    ? ''
-                    : widget.editAlbum.description,
+                initialValue: editAlbum == null ? '' : editAlbum.description,
                 onSaved: (String value) {
                   setState(() {
                     _formData.description = value;
@@ -73,9 +63,8 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                 decoration: InputDecoration(
                     labelText: "Album Price",
                     prefixIcon: Icon(Icons.monetization_on)),
-                initialValue: widget.editAlbum == null
-                    ? ''
-                    : widget.editAlbum.price.toString(),
+                initialValue:
+                    editAlbum == null ? '' : editAlbum.price.toString(),
                 validator: (String value) {
                   if (value.isEmpty ||
                       !RegExp(r'^(?:[1-9]\d*|0)?(?:\.\d+)?$').hasMatch(value)) {
@@ -92,22 +81,30 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
               SizedBox(
                 height: 10.0,
               ),
-              RaisedButton(
-                color: Theme.of(context).accentColor,
-                textColor: Colors.purple,
-                child: Text("Add"),
-                onPressed: () {
-                  if (!_formKey.currentState.validate()) {
-                    return;
-                  }
-                  _formKey.currentState.save();
-                  if(widget.editAlbum == null){
-                  widget.addAlbum(_formData);
-                  }
-                  else{
-                    widget.updateAlbum(widget.albumIndex, widget.editAlbum);
-                  }
-                  Navigator.pushReplacementNamed(context, '/albums');
+              ScopedModelDescendant<AlbumsModel>(
+                builder: (context, child, model) {
+                  return RaisedButton(
+                    color: Theme.of(context).accentColor,
+                    textColor: Colors.purple,
+                    child: Text("Save"),
+                    onPressed: () {
+                      if (!_formKey.currentState.validate()) {
+                        return;
+                      }
+                      _formKey.currentState.save();
+                      if (model.selectedIndex == null) {
+                        model.addAlbum(_formData);
+                      } else {
+                        model.updateAlbum(Album(
+                          title: _formData.title,
+                          description: _formData.description,
+                          price: _formData.price,
+                          imageUrl: _formData.imageUrl
+                        ));
+                      }
+                      Navigator.pushReplacementNamed(context, '/albums');
+                    },
+                  );
                 },
               )
             ],
@@ -115,14 +112,21 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
         ),
       ),
     );
+  }
 
-    return widget.editAlbum == null
-        ? pageContent
-        : Scaffold(
-            appBar: AppBar(
-              title: Text('Edit Album'),
-            ),
-            body: pageContent,
-          );
+  @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AlbumsModel>(builder: (context, child, model) {
+      final Widget pageContent =
+          _buildPageContent(context, model.selectedAlbum);
+      return model.selectedIndex == null
+          ? pageContent
+          : Scaffold(
+              appBar: AppBar(
+                title: Text('Edit Album'),
+              ),
+              body: pageContent,
+            );
+    });
   }
 }

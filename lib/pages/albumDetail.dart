@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/domain/album.dart';
+import 'package:scoped_model/scoped_model.dart';
+
 import 'package:flutter_course/widgets/priceTag.dart';
 
-import '../domain/album.dart';
+import '../scopedModels/albums.dart';
 
 class AlbumDetailPage extends StatelessWidget {
-  // Constructor
-  AlbumDetailPage(this.album);
 
-  //Properties
-  final Album album;
+  final int albumIndex;
+
+  // Constructor
+  AlbumDetailPage(this.albumIndex);
 
   Widget _showAlertDialogWhilstDelete(BuildContext context) {
     return AlertDialog(
@@ -39,9 +42,12 @@ class AlbumDetailPage extends StatelessWidget {
           Navigator.pop(context, false);
           return Future.value(false);
         },
-        child: Scaffold(
+        child:ScopedModelDescendant<AlbumsModel>(builder: (context, child, model) {
+          final Album currentAlbum = model.albums[albumIndex];
+
+          return  Scaffold(
             appBar: AppBar(
-              title: Text(album.title),
+              title: Text(currentAlbum.title),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.delete_forever, size: 35,),
@@ -60,17 +66,18 @@ class AlbumDetailPage extends StatelessWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset(album.imageUrl),
+                Image.asset(currentAlbum.imageUrl),
                 Container(
                     padding: EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        Text(album.title),
-                        Text(album.description),
-                        PriceTag(album.price.toString()),
+                        Text(currentAlbum.title),
+                        Text(currentAlbum.description),
+                        PriceTag(currentAlbum.price.toString()),
                         ],
                     )),
               ],
-            ))));
+            )));
+        },));
   }
 }
