@@ -28,6 +28,12 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _updateAlbum(int index, Album album){
+    setState(() {
+          _albums[index] = album;
+        });
+  }
+
   void _deleteAlbum(int index) {
     setState(() {
       _albums.removeAt(index);
@@ -45,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/': (context) => AuthPage(),
         '/albums': (context) => ShowAlbumsPage(_albums),
-        '/admin': (context) => ManageAlbumsPage(_addAlbum, _deleteAlbum),
+        '/admin': (context) => ManageAlbumsPage(_addAlbum, _deleteAlbum, _updateAlbum, _albums),
       },
       onGenerateRoute: (RouteSettings settings) {
         final List<String> pathElements = settings.name.split('/');
