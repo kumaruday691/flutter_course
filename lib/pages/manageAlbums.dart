@@ -51,7 +51,7 @@ class ManageAlbumsPage extends StatelessWidget {
         body: TabBarView(
           children: <Widget>[
             EditAlbumPage(addAlbum:addAlbum, deleteAlbum:deleteAlbum),
-            ListAlbumPage(albums, updateAlbum),
+            ListAlbumPage(albums, updateAlbum, deleteAlbum),
           ],
         ),
       ),
