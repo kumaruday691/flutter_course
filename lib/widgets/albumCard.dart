@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../domain/album.dart';
 import './priceTag.dart';
+import '../scopedModels/albums.dart';
 
 class AlbumCard extends StatelessWidget {
   final Album currentAlbum;
@@ -48,17 +50,22 @@ class AlbumCard extends StatelessWidget {
             children: <Widget>[
               IconButton(
                   icon: Icon(
-                    Icons.info_outline,
+                    Icons.info,
                     color: Colors.indigo,
                   ),
                   onPressed: () => Navigator.pushNamed<bool>(
                       context, '/album/' + currentIndex.toString())),
-              IconButton(
-                  icon: Icon(
-                    Icons.favorite_border,
+              ScopedModelDescendant<AlbumsModel>(builder: (context, child, model){
+                return IconButton(
+                  icon: Icon( model.albums[currentIndex].isFavorite ?
+                    Icons.favorite : Icons.favorite_border ,
                     color: Colors.pink,
                   ),
-                  onPressed: () {})
+                  onPressed: () {
+                      model.selectAlbum(currentIndex);
+                      model.toggleAlbumFavoriteStatus();
+                  });
+              },) 
             ],
           )
         ],

@@ -26,7 +26,7 @@ class Albums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AlbumsModel>(builder: (context, widget, model) {
-      return _renderItemIfApplicable(model.albums); 
+      return _renderItemIfApplicable(model.showFilteredByFavs()); 
     },); 
   }
 }
