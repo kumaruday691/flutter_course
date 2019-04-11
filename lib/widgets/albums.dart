@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/albumCard.dart';
 import '../domain/album.dart';
-import '../scopedModels/albums.dart';
+import '../scopedModels/unitOfWork.dart';
 
 class Albums extends StatelessWidget {
 
@@ -25,7 +25,7 @@ class Albums extends StatelessWidget {
   // override build Method
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AlbumsModel>(builder: (context, widget, model) {
+    return ScopedModelDescendant<UnitOfWorkModel>(builder: (context, widget, model) {
       return _renderItemIfApplicable(model.showFilteredByFavs()); 
     },); 
   }

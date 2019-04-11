@@ -4,7 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter_course/widgets/priceTag.dart';
 
-import '../scopedModels/albums.dart';
+import '../scopedModels/unitOfWork.dart';
 
 class AlbumDetailPage extends StatelessWidget {
 
@@ -42,7 +42,7 @@ class AlbumDetailPage extends StatelessWidget {
           Navigator.pop(context, false);
           return Future.value(false);
         },
-        child:ScopedModelDescendant<AlbumsModel>(builder: (context, child, model) {
+        child:ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
           final Album currentAlbum = model.albums[albumIndex];
 
           return  Scaffold(
@@ -74,6 +74,7 @@ class AlbumDetailPage extends StatelessWidget {
                         Text(currentAlbum.title),
                         Text(currentAlbum.description),
                         PriceTag(currentAlbum.price.toString()),
+                        Text(currentAlbum.userEmail)
                         ],
                     )),
               ],

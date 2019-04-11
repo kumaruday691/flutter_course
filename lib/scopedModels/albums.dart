@@ -1,13 +1,12 @@
+import 'package:flutter_course/scopedModels/connectedAlbumsModel.dart';
 import 'package:scoped_model/scoped_model.dart';
 import '../domain/album.dart';
 
-class AlbumsModel extends Model {
-  List<Album> _albums = [];
-  int _selectedAlbumIndex;
+mixin AlbumsModel on ConnectedAlbumsModel {
   bool _showFavs = false;
 
-  List<Album> get albums {
-    return List.from(_albums);
+  List<Album> get allAlbums {
+    return List.from(albums);
   }
 
   bool get isfavoriteSelected {
@@ -15,29 +14,37 @@ class AlbumsModel extends Model {
   }
 
   Album get selectedAlbum {
-    if (_selectedAlbumIndex == null) {
+    if (selAlbumIndex == null) {
       return null;
     }
 
-    return _albums[_selectedAlbumIndex];
+    return albums[selAlbumIndex];
   }
 
   List<Album> showFilteredByFavs() {
     List<Album> temp;
     if (_showFavs) {
-      temp = _albums.where((Album a) => a.isFavorite).toList();
+      temp = albums.where((Album a) => a.isFavorite).toList();
       notifyListeners();
     } else {
-      temp = List.from(_albums);
+      temp = List.from(albums);
       notifyListeners();
     }
     return temp;
   }
 
   void toggleAlbumFavoriteStatus() {
-    final bool isCurrentlyFavorite = _albums[_selectedAlbumIndex].isFavorite;
-    _albums[_selectedAlbumIndex].isFavorite = !isCurrentlyFavorite;
-    _selectedAlbumIndex = null;
+    final bool isCurrentlyFavorite = albums[selAlbumIndex].isFavorite;
+    albums[selAlbumIndex].isFavorite = !isCurrentlyFavorite;
+    final Album updatedAlbum = Album(
+      title: selectedAlbum.title,
+      description: selectedAlbum.description,
+      imageUrl: selectedAlbum.imageUrl,
+      price: selectedAlbum.price,
+      userEmail: authenticatedUser.email,
+      userId: authenticatedUser.id
+    );
+    albums[selectedIndex]= updatedAlbum;
     notifyListeners();
   }
 
@@ -47,28 +54,34 @@ class AlbumsModel extends Model {
   }
 
   int get selectedIndex {
-    return _selectedAlbumIndex;
+    return selAlbumIndex;
   }
 
-  void addAlbum(Album album) {
-    _albums.add(album);
-    _selectedAlbumIndex = null;
-    notifyListeners();
-  }
+ void updateAlbum(String title, String description, String image, double price) {
+    final Album updatedAlbum = Album(
+      title: title,
+      description: description,
+      imageUrl: image,
+      price: price,
+      userEmail: selectedAlbum.userEmail,
+      userId: selectedAlbum.userId
+    );
 
-  void updateAlbum(Album album) {
-    _albums[_selectedAlbumIndex] = album;
-    _selectedAlbumIndex = null;
+    albums[selAlbumIndex] = updatedAlbum;
     notifyListeners();
   }
+ 
 
   void deleteAlbum() {
-    _albums.removeAt(_selectedAlbumIndex);
-    _selectedAlbumIndex = null;
+    albums.removeAt(selAlbumIndex);
     notifyListeners();
   }
 
   void selectAlbum(int index) {
-    _selectedAlbumIndex = index;
+    selAlbumIndex = index;
+    if(index!=null)
+    {
+      notifyListeners();
+    }
   }
 }

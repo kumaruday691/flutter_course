@@ -3,7 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../domain/album.dart';
 import './priceTag.dart';
-import '../scopedModels/albums.dart';
+import '../scopedModels/unitOfWork.dart';
 
 class AlbumCard extends StatelessWidget {
   final Album currentAlbum;
@@ -55,7 +55,7 @@ class AlbumCard extends StatelessWidget {
                   ),
                   onPressed: () => Navigator.pushNamed<bool>(
                       context, '/album/' + currentIndex.toString())),
-              ScopedModelDescendant<AlbumsModel>(builder: (context, child, model){
+              ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model){
                 return IconButton(
                   icon: Icon( model.albums[currentIndex].isFavorite ?
                     Icons.favorite : Icons.favorite_border ,

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import './editAlbum.dart';
-import '../scopedModels/albums.dart';
+import '../scopedModels/unitOfWork.dart';
 
 class ListAlbumPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AlbumsModel>(builder: (context, child, model) {
+    return ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
       return ListView.builder(
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key(model.albums[index].title),
+            key: Key(model.allAlbums[index].title),
             background: Container(
               color: Colors.red,
             ),
@@ -28,9 +28,9 @@ class ListAlbumPage extends StatelessWidget {
                 ListTile(
                     leading: CircleAvatar(
                         backgroundImage:
-                            AssetImage(model.albums[index].imageUrl)),
-                    title: Text(model.albums[index].title),
-                    subtitle: Text('\$${model.albums[index].price}'),
+                            AssetImage(model.allAlbums[index].imageUrl)),
+                    title: Text(model.allAlbums[index].title),
+                    subtitle: Text('\$${model.allAlbums[index].price}'),
                     trailing: IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
@@ -43,7 +43,7 @@ class ListAlbumPage extends StatelessWidget {
             ),
           );
         },
-        itemCount: model.albums.length,
+        itemCount: model.allAlbums.length,
       );
     });
   }

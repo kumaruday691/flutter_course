@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
+import '../scopedModels/unitOfWork.dart';
 
 class AuthPage extends StatefulWidget {
   @override
@@ -64,15 +67,15 @@ class _AuthPageState extends State<AuthPage> {
     );
   }
 
-  void submitForm() {
+  void submitForm(Function login) {
+    login(_email, _password);
     Navigator.pushReplacementNamed(context, '/albums');
   }
 
   @override
   Widget build(BuildContext context) {
-
     final double deviceWidth = MediaQuery.of(context).size.width;
-    final double targetWidth =  deviceWidth> 768 ? 500 : deviceWidth * 0.95; 
+    final double targetWidth = deviceWidth > 768 ? 500 : deviceWidth * 0.95;
 
     return Scaffold(
       appBar: AppBar(title: Text("Login")),
@@ -91,11 +94,15 @@ class _AuthPageState extends State<AuthPage> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  RaisedButton(
-                    color: Theme.of(context).accentColor,
-                    textColor: Colors.purple,
-                    child: Text("Login"),
-                    onPressed: submitForm,
+                  ScopedModelDescendant<UnitOfWorkModel>(
+                    builder: (context, child, model) {
+                      return RaisedButton(
+                        color: Theme.of(context).accentColor,
+                        textColor: Colors.purple,
+                        child: Text("Login"),
+                        onPressed: () => submitForm(model.login),
+                      );
+                    },
                   )
                 ],
               ),

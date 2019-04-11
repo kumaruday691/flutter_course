@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/albums.dart';
-import '../scopedModels/albums.dart';
+import '../scopedModels/unitOfWork.dart';
 
 class ShowAlbumsPage extends StatelessWidget {
 
@@ -28,7 +28,7 @@ class ShowAlbumsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Albums'),
         actions: <Widget>[
-         ScopedModelDescendant<AlbumsModel>(builder: (context, child, model){
+         ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model){
             return IconButton(
             icon: Icon(model.isfavoriteSelected ?Icons.favorite: Icons.favorite_border),
             onPressed: () {

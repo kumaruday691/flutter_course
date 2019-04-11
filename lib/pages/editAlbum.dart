@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/scopedModels/unitOfWork.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../domain/album.dart';
-import '../scopedModels/albums.dart';
 
 class EditAlbumPage extends StatefulWidget {
   @override
@@ -81,7 +81,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
               SizedBox(
                 height: 10.0,
               ),
-              ScopedModelDescendant<AlbumsModel>(
+              ScopedModelDescendant<UnitOfWorkModel>(
                 builder: (context, child, model) {
                   return RaisedButton(
                     color: Theme.of(context).accentColor,
@@ -93,16 +93,16 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                       }
                       _formKey.currentState.save();
                       if (model.selectedIndex == null) {
-                        model.addAlbum(_formData);
+                        model.addAlbum(_formData.title, _formData.description, _formData.imageUrl, _formData.price);
                       } else {
-                        model.updateAlbum(Album(
-                          title: _formData.title,
-                          description: _formData.description,
-                          price: _formData.price,
-                          imageUrl: _formData.imageUrl
-                        ));
+                        model.updateAlbum(
+                          _formData.title,
+                           _formData.description,
+                            _formData.imageUrl,
+                           _formData.price
+                        );
                       }
-                      Navigator.pushReplacementNamed(context, '/albums');
+                      Navigator.pushReplacementNamed(context, '/albums').then((_)=>model.selectAlbum(null));
                     },
                   );
                 },
@@ -116,7 +116,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AlbumsModel>(builder: (context, child, model) {
+    return ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
       final Widget pageContent =
           _buildPageContent(context, model.selectedAlbum);
       return model.selectedIndex == null

@@ -6,7 +6,7 @@ import './domain/album.dart';
 import './pages/auth.dart';
 import './pages/showAlbums.dart';
 import './pages/albumDetail.dart';
-import './scopedModels/albums.dart';
+import './scopedModels/unitOfWork.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,8 +24,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<AlbumsModel>(
-      model:AlbumsModel(),
+    return ScopedModel<UnitOfWorkModel>(
+      model:UnitOfWorkModel(),
       child: MaterialApp(
         theme: ThemeData(
             brightness: Brightness.light,
