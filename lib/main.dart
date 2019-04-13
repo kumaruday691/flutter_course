@@ -24,8 +24,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    final UnitOfWorkModel model = UnitOfWorkModel();
     return ScopedModel<UnitOfWorkModel>(
-      model:UnitOfWorkModel(),
+      model:model,
       child: MaterialApp(
         theme: ThemeData(
             brightness: Brightness.light,
@@ -34,8 +35,8 @@ class _MyAppState extends State<MyApp> {
         //home: AuthPage(),
         routes: {
           '/': (context) => AuthPage(),
-          '/albums': (context) => ShowAlbumsPage(),
-          '/admin': (context) => ManageAlbumsPage(),
+          '/albums': (context) => ShowAlbumsPage(model),
+          '/admin': (context) => ManageAlbumsPage(model),
         },
         onGenerateRoute: (RouteSettings settings) {
           final List<String> pathElements = settings.name.split('/');
@@ -43,16 +44,19 @@ class _MyAppState extends State<MyApp> {
             return null;
           }
           if (pathElements[1] == 'album') {
-            final int index = int.parse(pathElements[2]);
+            final String id = pathElements[2];
+            final Album album = model.allAlbums.firstWhere((Album al) {
+              return  al.id == id;
+            });
 
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => AlbumDetailPage(index),
+              builder: (BuildContext context) => AlbumDetailPage(album),
             );
           }
           return null;
         },
         onUnknownRoute: (RouteSettings settings) {
-          return MaterialPageRoute(builder: (context) => ShowAlbumsPage());
+          return MaterialPageRoute(builder: (context) => ShowAlbumsPage(model));
         },
       ),
     );

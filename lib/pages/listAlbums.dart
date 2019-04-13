@@ -4,7 +4,37 @@ import 'package:scoped_model/scoped_model.dart';
 import './editAlbum.dart';
 import '../scopedModels/unitOfWork.dart';
 
-class ListAlbumPage extends StatelessWidget {
+class ListAlbumPage extends StatefulWidget {
+
+  final UnitOfWorkModel model;
+
+  ListAlbumPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ListAlbumPageState();
+  }
+}
+
+class _ListAlbumPageState extends State<ListAlbumPage> {
+
+  @override
+  void initState() {
+    widget.model.fetchAlbums().then((bool isSuccess) {
+                              if(!isSuccess){
+                                showDialog(context: context, builder: (BuildContext context){
+                                  return AlertDialog(title: Text('Could not complete request'),
+                                  content: Text('Try later'),
+                                  actions: <Widget>[
+                                    FlatButton(child:Text("Okay"),
+                                    onPressed: () => Navigator.of(context).pop(),)
+                                  ],);
+                                });
+                                return;
+                              }});
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
@@ -17,7 +47,7 @@ class ListAlbumPage extends StatelessWidget {
             ),
             onDismissed: (DismissDirection direction) {
               if (direction == DismissDirection.endToStart) {
-                model.selectAlbum(index);
+                model.selectAlbum(model.allAlbums[index].id);
                 model.deleteAlbum();
               } else if (direction == DismissDirection.startToEnd) {
                 takeToEditScreen(context, index);
@@ -28,13 +58,13 @@ class ListAlbumPage extends StatelessWidget {
                 ListTile(
                     leading: CircleAvatar(
                         backgroundImage:
-                            AssetImage(model.allAlbums[index].imageUrl)),
+                            NetworkImage(model.allAlbums[index].imageUrl)),
                     title: Text(model.allAlbums[index].title),
                     subtitle: Text('\$${model.allAlbums[index].price}'),
                     trailing: IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        model.selectAlbum(index);
+                        model.selectAlbum(model.allAlbums[index].id);
                         takeToEditScreen(context, index);
                       },
                     )),

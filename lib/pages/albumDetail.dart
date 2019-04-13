@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_course/domain/album.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -8,10 +10,9 @@ import '../scopedModels/unitOfWork.dart';
 
 class AlbumDetailPage extends StatelessWidget {
 
-  final int albumIndex;
+  final Album album;
 
-  // Constructor
-  AlbumDetailPage(this.albumIndex);
+  AlbumDetailPage(this.album);
 
   Widget _showAlertDialogWhilstDelete(BuildContext context) {
     return AlertDialog(
@@ -42,12 +43,9 @@ class AlbumDetailPage extends StatelessWidget {
           Navigator.pop(context, false);
           return Future.value(false);
         },
-        child:ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
-          final Album currentAlbum = model.albums[albumIndex];
-
-          return  Scaffold(
+        child: Scaffold(
             appBar: AppBar(
-              title: Text(currentAlbum.title),
+              title: Text(album.title),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.delete_forever, size: 35,),
@@ -66,19 +64,22 @@ class AlbumDetailPage extends StatelessWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset(currentAlbum.imageUrl),
+                FadeInImage(image: NetworkImage(album.imageUrl), 
+          height: 300.0,
+          fit:BoxFit.cover,
+          placeholder: AssetImage("assets/744857.jpg"),),
                 Container(
                     padding: EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        Text(currentAlbum.title),
-                        Text(currentAlbum.description),
-                        PriceTag(currentAlbum.price.toString()),
-                        Text(currentAlbum.userEmail)
+                        Text(album.title),
+                        Text(album.description),
+                        PriceTag(album.price.toString()),
+                        Text(album.userEmail)
                         ],
                     )),
               ],
-            )));
-        },));
+            ))));
+      
   }
 }

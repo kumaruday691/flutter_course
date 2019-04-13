@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/scopedModels/unitOfWork.dart';
 
 import './listAlbums.dart';
 import './editAlbum.dart';
 
+
 class ManageAlbumsPage extends StatelessWidget {
+
+  final UnitOfWorkModel model;
+
+  ManageAlbumsPage(this.model);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -43,7 +50,7 @@ class ManageAlbumsPage extends StatelessWidget {
         body: TabBarView(
           children: <Widget>[
             EditAlbumPage(),
-            ListAlbumPage(),
+            ListAlbumPage(model),
           ],
         ),
       ),

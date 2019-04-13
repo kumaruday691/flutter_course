@@ -5,6 +5,7 @@ class Album {
   //Constructor
   Album(
     {
+      this.id,
       this.title, 
       this.imageUrl, 
       this.description, 
@@ -16,6 +17,7 @@ class Album {
     );
 
   //Properties
+  String id;
   String title;
   String imageUrl;
   String description;

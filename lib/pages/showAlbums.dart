@@ -4,7 +4,26 @@ import 'package:scoped_model/scoped_model.dart';
 import '../widgets/albums.dart';
 import '../scopedModels/unitOfWork.dart';
 
-class ShowAlbumsPage extends StatelessWidget {
+class ShowAlbumsPage extends StatefulWidget {
+
+  final UnitOfWorkModel model;
+
+  ShowAlbumsPage(this.model);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _ShowAlbumsPageState();
+  }
+}
+
+class _ShowAlbumsPageState extends State<ShowAlbumsPage> {
+
+  @override
+  void initState() {
+    widget.model.fetchAlbums();
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +57,23 @@ class ShowAlbumsPage extends StatelessWidget {
          },) 
         ],
       ),
-      body: Albums(),
+      body: _buildAlbumsList(),
     );
   }
+}
+
+Widget _buildAlbumsList() {
+  return ScopedModelDescendant(builder: (BuildContext context, Widget child, UnitOfWorkModel model) {
+    Widget content = Center(child:Text("No albums found!"));
+    if(model.displayedAlbums.length > 0 && !model.isLoading) {
+        content = Albums();
+    }
+    else if(model.isLoading) {
+      content = Center(child:CircularProgressIndicator());
+    }
+
+    return RefreshIndicator(onRefresh: model.fetchAlbums, // needs future, so your function needs to be future
+      child:content
+      );
+  },);
 }

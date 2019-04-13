@@ -13,7 +13,7 @@ class EditAlbumPage extends StatefulWidget {
 
 class _EditAlbumPageState extends State<EditAlbumPage> {
   final Album _formData = new Album(
-      title: "", description: "", price: 0.0, imageUrl: 'assets/744857.jpg');
+      title: "", description: "", price: 0.0, imageUrl: '');
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Widget _buildPageContent(BuildContext context, Album editAlbum) {
@@ -83,7 +83,8 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
               ),
               ScopedModelDescendant<UnitOfWorkModel>(
                 builder: (context, child, model) {
-                  return RaisedButton(
+                  return model.isLoading ? Center(child:CircularProgressIndicator()):
+                   RaisedButton(
                     color: Theme.of(context).accentColor,
                     textColor: Colors.purple,
                     child: Text("Save"),
@@ -92,17 +93,56 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                         return;
                       }
                       _formKey.currentState.save();
-                      if (model.selectedIndex == null) {
-                        model.addAlbum(_formData.title, _formData.description, _formData.imageUrl, _formData.price);
+                      if (model.selectedIndex == -1) {
+                        model.addAlbum(
+                          _formData.title,
+                           _formData.description,
+                            _formData.imageUrl, 
+                            _formData.price
+                            ).then((bool isSuccess) {
+                              if(!isSuccess){
+                                showDialog(context: context, builder: (BuildContext context){
+                                  return AlertDialog(title: Text('Could not complete request'),
+                                  content: Text('Try later'),
+                                  actions: <Widget>[
+                                    FlatButton(child:Text("Okay"),
+                                    onPressed: () => Navigator.of(context).pop(),)
+                                  ],);
+                                });
+                                return;
+                              }
+
+                            Navigator
+                            .pushReplacementNamed(context, '/albums')
+                            .then((_)=>model.selectAlbum(null));
+                            
+                      });
                       } else {
                         model.updateAlbum(
                           _formData.title,
                            _formData.description,
                             _formData.imageUrl,
                            _formData.price
-                        );
+                        ).then((bool isSuccess) {
+                              if(!isSuccess){
+                                showDialog(context: context, builder: (BuildContext context){
+                                  return AlertDialog(title: Text('Could not complete request'),
+                                  content: Text('Try later'),
+                                  actions: <Widget>[
+                                    FlatButton(child:Text("Okay"),
+                                    onPressed: () => Navigator.of(context).pop(),)
+                                  ],);
+                                });
+                                return;
+                              }
+
+                            Navigator
+                            .pushReplacementNamed(context, '/albums')
+                            .then((_)=>model.selectAlbum(null));
+                            
+                      });
                       }
-                      Navigator.pushReplacementNamed(context, '/albums').then((_)=>model.selectAlbum(null));
+                     
                     },
                   );
                 },
@@ -119,7 +159,7 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
     return ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model) {
       final Widget pageContent =
           _buildPageContent(context, model.selectedAlbum);
-      return model.selectedIndex == null
+      return model.selectedIndex == -1
           ? pageContent
           : Scaffold(
               appBar: AppBar(

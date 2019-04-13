@@ -16,7 +16,10 @@ class AlbumCard extends StatelessWidget {
     return Card(
       child: Column(
         children: <Widget>[
-          Image.asset(currentAlbum.imageUrl),
+          FadeInImage(image: NetworkImage(currentAlbum.imageUrl), 
+          height: 300.0,
+          fit:BoxFit.cover,
+          placeholder: AssetImage("assets/744857.jpg"),),
           SizedBox(
             height: 10,
           ),
@@ -45,7 +48,8 @@ class AlbumCard extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                 child: Text(currentAlbum.description)),
           ),
-          ButtonBar(
+           ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model){
+                return ButtonBar(
             alignment: MainAxisAlignment.center,
             children: <Widget>[
               IconButton(
@@ -54,22 +58,20 @@ class AlbumCard extends StatelessWidget {
                     color: Colors.indigo,
                   ),
                   onPressed: () => Navigator.pushNamed<bool>(
-                      context, '/album/' + currentIndex.toString())),
-              ScopedModelDescendant<UnitOfWorkModel>(builder: (context, child, model){
-                return IconButton(
+                      context, '/album/' + model.allAlbums[currentIndex].id)),
+              IconButton(
                   icon: Icon( model.albums[currentIndex].isFavorite ?
                     Icons.favorite : Icons.favorite_border ,
                     color: Colors.pink,
                   ),
                   onPressed: () {
-                      model.selectAlbum(currentIndex);
+                      model.selectAlbum(model.allAlbums[currentIndex].id);
                       model.toggleAlbumFavoriteStatus();
-                  });
-              },) 
-            ],
-          )
-        ],
-      ),
+                  })
+            ]
+          );
+           },
+      )]),
     );
   }
 }
