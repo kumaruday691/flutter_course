@@ -22,9 +22,23 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  final UnitOfWorkModel model = UnitOfWorkModel();
+  bool _isAuthenticated = false;
+
+  @override
+  void initState() {
+    model.autoAuthenticate();
+    model.subject.listen((bool isAuthenticated) {
+      setState(() {
+        _isAuthenticated = isAuthenticated;
+      });
+    } );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final UnitOfWorkModel model = UnitOfWorkModel();
     return ScopedModel<UnitOfWorkModel>(
       model:model,
       child: MaterialApp(
@@ -34,11 +48,18 @@ class _MyAppState extends State<MyApp> {
             accentColor: Colors.tealAccent),
         //home: AuthPage(),
         routes: {
-          '/': (context) => AuthPage(),
-          '/albums': (context) => ShowAlbumsPage(model),
-          '/admin': (context) => ManageAlbumsPage(model),
+          '/': (context) =>  !_isAuthenticated ? 
+          AuthPage():
+          ShowAlbumsPage(model),
+          '/admin': (context) => !_isAuthenticated ? 
+          AuthPage(): ManageAlbumsPage(model),
         },
         onGenerateRoute: (RouteSettings settings) {
+          if(!_isAuthenticated){
+            return MaterialPageRoute<bool>(
+              builder: (BuildContext context) => AuthPage(),
+            );
+          }
           final List<String> pathElements = settings.name.split('/');
           if (pathElements[0] != '') {
             return null;
@@ -50,13 +71,15 @@ class _MyAppState extends State<MyApp> {
             });
 
             return MaterialPageRoute<bool>(
-              builder: (BuildContext context) => AlbumDetailPage(album),
+              builder: (BuildContext context) => !_isAuthenticated ? 
+          AuthPage(): AlbumDetailPage(album),
             );
           }
           return null;
         },
         onUnknownRoute: (RouteSettings settings) {
-          return MaterialPageRoute(builder: (context) => ShowAlbumsPage(model));
+          return MaterialPageRoute(builder: (context) => !_isAuthenticated ? 
+          AuthPage():ShowAlbumsPage(model));
         },
       ),
     );

@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_course/scopedModels/connectedAlbumsModel.dart';
 import '../domain/album.dart';
-import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
@@ -31,6 +31,10 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       return null;
     }
 
+    if(albums.length == 0){
+      return null;
+    }
+
     return albums.firstWhere((Album album) {
       return album.id == selectedId;
     });
@@ -48,24 +52,56 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     return temp;
   }
 
-  void toggleAlbumFavoriteStatus() {
+  void toggleAlbumFavoriteStatus() async {
     
     final int selectedAlbumInd = albums.indexWhere((Album album) {
       return album.id == selectedId;
     });
 
-    final bool isCurrentlyFavorite = albums[selectedAlbumInd].isFavorite;
+    Album currentAlbum = albums[selectedAlbumInd];
+    final bool isCurrentlyFavorite = currentAlbum.isFavorite;
     albums[selectedAlbumInd].isFavorite = !isCurrentlyFavorite;
-    final Album updatedAlbum = Album(
-      title: selectedAlbum.title,
-      description: selectedAlbum.description,
-      imageUrl: selectedAlbum.imageUrl,
-      price: selectedAlbum.price,
+     final Album updatedAlbum = Album(
+      title: currentAlbum.title,
+      description: currentAlbum.description,
+      imageUrl: currentAlbum.imageUrl,
+      price: currentAlbum.price,
       userEmail: authenticatedUser.email,
-      userId: authenticatedUser.id
+      userId: authenticatedUser.id,
+      isFavorite: currentAlbum.isFavorite
     );
+
     albums[selectedAlbumInd]= updatedAlbum;
     notifyListeners();
+
+    try{
+    http.Response response;
+    if(!isCurrentlyFavorite){
+     response  = await http.put('https://flutteralbums.firebaseio.com/albums/${currentAlbum.id}/wishListUsers/${authenticatedUser.id}.json?auth=${authenticatedUser.token}',
+      body:json.encode(true)
+      );
+    }
+    else{
+       response = await http.delete('https://flutteralbums.firebaseio.com/albums/${currentAlbum.id}/wishListUsers/${authenticatedUser.id}.json?auth=${authenticatedUser.token}',
+      );
+    }
+    if(response.statusCode != 200 && response.statusCode != 201){
+      final Album updatedAlbum = Album(
+      title: currentAlbum.title,
+      description: currentAlbum.description,
+      imageUrl: currentAlbum.imageUrl,
+      price: currentAlbum.price,
+      userEmail: authenticatedUser.email,
+      userId: authenticatedUser.id,
+      isFavorite: !currentAlbum.isFavorite
+    );
+
+    albums[selectedAlbumInd]= updatedAlbum;
+    notifyListeners();
+      }
+    }catch(error){
+      print(error);
+    }
   }
 
   void toggleOverallFavFilter() {
@@ -96,7 +132,7 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       'userId':authenticatedUser.id
     }; 
     try{
-      final http.Response response = await http.post("https://flutteralbums.firebaseio.com/albums.json", 
+      final http.Response response = await http.post("https://flutteralbums.firebaseio.com/albums.json?auth=${authenticatedUser.token}", 
       body: json.encode(albumData));
 
       if(response.statusCode !=200 && response.statusCode != 201) {
@@ -130,8 +166,6 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     
   }
 
-
-
  Future<bool> updateAlbum(String title, String description, String image, double price) {
 
    isLoading = true;
@@ -145,7 +179,7 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       'userId':authenticatedUser.id
    };
 
-   return http.put("https://flutteralbums.firebaseio.com/albums/${selectedAlbum.id}.json",
+   return http.put("https://flutteralbums.firebaseio.com/albums/${selectedAlbum.id}.json?auth=${authenticatedUser.token}",
    body: json.encode(updatedData))
    .then((http.Response response) {
      isLoading = false;
@@ -174,9 +208,11 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     
   }
  
-  Future<bool> fetchAlbums() {
+  Future<bool> fetchAlbums({onlyForUser = false}) {
     isLoading = true;
-    return http.get("https://flutteralbums.firebaseio.com/albums.json").
+    notifyListeners();
+    
+    return http.get("https://flutteralbums.firebaseio.com/albums.json?auth=${authenticatedUser.token}").
     then((http.Response response) {
 
       final List<Album> fetchedAlbums = [];
@@ -190,6 +226,11 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       }
 
       getData.forEach((String id, dynamic currentAlbum) {
+
+        if(onlyForUser && authenticatedUser.id != currentAlbum['userId']){
+          return;
+        }
+
         final Album album = Album(
           id: id,
           title: currentAlbum['title'],
@@ -197,7 +238,8 @@ mixin AlbumsModel on ConnectedAlbumsModel {
           imageUrl: currentAlbum['imageUrl'],
           price: currentAlbum['price'],
           userEmail: currentAlbum['userEmail'],
-          userId: currentAlbum['userId']
+          userId: currentAlbum['userId'],
+          isFavorite: currentAlbum['wishListUsers'] == null ? false: (currentAlbum['wishListUsers'] as Map<String, dynamic>).containsKey(authenticatedUser.id)
         );
 
         fetchedAlbums.add(album);
@@ -225,7 +267,7 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     selAlbumId =  null;
     notifyListeners();
 
-    http.delete("https://flutteralbums.firebaseio.com/albums/${deletableId}.json")
+    http.delete("https://flutteralbums.firebaseio.com/albums/${deletableId}.json?auth=${authenticatedUser.token}")
     .then((http.Response response){
       isLoading = false;
     notifyListeners();

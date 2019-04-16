@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/scopedModels/unitOfWork.dart';
+import 'package:flutter_course/widgets/logOutList.dart';
 
 import './listAlbums.dart';
 import './editAlbum.dart';
@@ -27,9 +28,12 @@ class ManageAlbumsPage extends StatelessWidget {
               leading: Icon(Icons.album),
               title: Text('All Albums'),
               onTap: () {
-                Navigator.pushReplacementNamed(context, '/albums');
+                Navigator.pushReplacementNamed(context, '/');
               },
-            )
+            ),
+            Divider(),
+            LogOutListTile()
+
           ],
         )),
         appBar: AppBar(

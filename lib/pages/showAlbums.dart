@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-
+import '../widgets/logOutList.dart';
 import '../widgets/albums.dart';
 import '../scopedModels/unitOfWork.dart';
 
@@ -20,7 +20,7 @@ class _ShowAlbumsPageState extends State<ShowAlbumsPage> {
 
   @override
   void initState() {
-    widget.model.fetchAlbums();
+    widget.model.fetchAlbums(onlyForUser: true);
     super.initState();
   }
 
@@ -41,7 +41,9 @@ class _ShowAlbumsPageState extends State<ShowAlbumsPage> {
             onTap: () {
               Navigator.pushReplacementNamed(context, '/admin');
             },
-          )
+          ),
+          Divider(),
+          LogOutListTile(),
         ],
       )),
       appBar: AppBar(

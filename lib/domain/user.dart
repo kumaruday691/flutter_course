@@ -4,8 +4,8 @@ class User {
 
   String id;
   String email;
-  String password;
+  String token;
 
-  User({@required this.id, @required this.email, @required this.password});
+  User({@required this.id, @required this.email, @required this.token});
 
 }
