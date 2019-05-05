@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter_course/domain/locationData.dart';
 import 'package:flutter_course/scopedModels/connectedAlbumsModel.dart';
 import '../domain/album.dart';
 
@@ -68,7 +69,8 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       price: currentAlbum.price,
       userEmail: authenticatedUser.email,
       userId: authenticatedUser.id,
-      isFavorite: currentAlbum.isFavorite
+      isFavorite: currentAlbum.isFavorite,
+      location: currentAlbum.location
     );
 
     albums[selectedAlbumInd]= updatedAlbum;
@@ -93,7 +95,8 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       price: currentAlbum.price,
       userEmail: authenticatedUser.email,
       userId: authenticatedUser.id,
-      isFavorite: !currentAlbum.isFavorite
+      isFavorite: !currentAlbum.isFavorite,
+      location: currentAlbum.location
     );
 
     albums[selectedAlbumInd]= updatedAlbum;
@@ -119,7 +122,7 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     });
   }
 
-  Future<bool> addAlbum(String title, String description, String image, double price) async {
+  Future<bool> addAlbum(String title, String description, String image, double price, LocationData location) async {
 
     isLoading = true;
     notifyListeners();
@@ -129,7 +132,10 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       'imageUrl':"https://static.zerochan.net/Uchiha.Itachi.full.1933976.jpg", 
       'price':price,
       'userEmail':authenticatedUser.email,
-      'userId':authenticatedUser.id
+      'userId':authenticatedUser.id,
+      'loc_lat':location.latitude,
+      'loc_lng':location.longitude,
+      'loc_add':location.address
     }; 
     try{
       final http.Response response = await http.post("https://flutteralbums.firebaseio.com/albums.json?auth=${authenticatedUser.token}", 
@@ -151,7 +157,8 @@ mixin AlbumsModel on ConnectedAlbumsModel {
         imageUrl: image,
         price: price,
         userEmail: authenticatedUser.email,
-        userId: authenticatedUser.id
+        userId: authenticatedUser.id,
+        location: location
       );
 
       albums.add(newAlbum);
@@ -166,7 +173,7 @@ mixin AlbumsModel on ConnectedAlbumsModel {
     
   }
 
- Future<bool> updateAlbum(String title, String description, String image, double price) {
+ Future<bool> updateAlbum(String title, String description, String image, double price, LocationData location) {
 
    isLoading = true;
    notifyListeners();
@@ -176,7 +183,10 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       'imageUrl':"https://static.zerochan.net/Uchiha.Itachi.full.1933976.jpg", 
       'price':price,
       'userEmail':authenticatedUser.email,
-      'userId':authenticatedUser.id
+      'userId':authenticatedUser.id,
+      'loc_lat':location.latitude,
+      'loc_lng':location.longitude,
+      'loc_add':location.address
    };
 
    return http.put("https://flutteralbums.firebaseio.com/albums/${selectedAlbum.id}.json?auth=${authenticatedUser.token}",
@@ -189,8 +199,9 @@ mixin AlbumsModel on ConnectedAlbumsModel {
       description: description,
       imageUrl: image,
       price: price,
+      location: location,
       userEmail: selectedAlbum.userEmail,
-      userId: selectedAlbum.userId
+      userId: selectedAlbum.userId,
     );
 
     final int selectedAlbumInd = albums.indexWhere((Album album) {
@@ -239,7 +250,8 @@ mixin AlbumsModel on ConnectedAlbumsModel {
           price: currentAlbum['price'],
           userEmail: currentAlbum['userEmail'],
           userId: currentAlbum['userId'],
-          isFavorite: currentAlbum['wishListUsers'] == null ? false: (currentAlbum['wishListUsers'] as Map<String, dynamic>).containsKey(authenticatedUser.id)
+          isFavorite: currentAlbum['wishListUsers'] == null ? false: (currentAlbum['wishListUsers'] as Map<String, dynamic>).containsKey(authenticatedUser.id),
+          location:LocationData(currentAlbum['loc_lat'], currentAlbum['loc_lng'], currentAlbum['loc_add'])
         );
 
         fetchedAlbums.add(album);

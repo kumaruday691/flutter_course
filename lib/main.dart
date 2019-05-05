@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:map_view/map_view.dart';
+
 import './pages/manageAlbums.dart';
 
 import './domain/album.dart';
@@ -9,6 +11,7 @@ import './pages/albumDetail.dart';
 import './scopedModels/unitOfWork.dart';
 
 void main() {
+  MapView.setApiKey("AIzaSyAatGRplYt8Uuxp3Syyn7poAi293o6wmrY");
   runApp(MyApp());
 }
 

@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import '../domain/album.dart';
 import './priceTag.dart';
 import '../scopedModels/unitOfWork.dart';
+import 'addressTag.dart';
 
 class AlbumCard extends StatelessWidget {
   final Album currentAlbum;
@@ -40,6 +41,7 @@ class AlbumCard extends StatelessWidget {
               PriceTag(currentAlbum.price.toString())
             ],
           ),
+          AddressTag(currentAlbum.location.address),
           DecoratedBox(
             decoration: BoxDecoration(
                 border: Border.all(color: Colors.blueGrey, width: 1.0),

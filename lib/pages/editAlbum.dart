@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_course/scopedModels/unitOfWork.dart';
+import 'package:flutter_course/widgets/formInputs/location.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../domain/album.dart';
+import '../domain/locationData.dart';
 
 class EditAlbumPage extends StatefulWidget {
   @override
@@ -13,8 +15,12 @@ class EditAlbumPage extends StatefulWidget {
 
 class _EditAlbumPageState extends State<EditAlbumPage> {
   final Album _formData = new Album(
-      title: "", description: "", price: 0.0, imageUrl: '');
+      title: "", description: "", price: 0.0, imageUrl: '', location: null);
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  void _setLocation(LocationData locationData) {
+    _formData.location = locationData;
+  }
 
   Widget _buildPageContent(BuildContext context, Album editAlbum) {
     final double deviceWidth = MediaQuery.of(context).size.width;
@@ -81,6 +87,12 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
               SizedBox(
                 height: 10.0,
               ),
+
+              LocationInput(this._setLocation, editAlbum),
+
+              SizedBox(
+                height: 10.0,
+              ),
               ScopedModelDescendant<UnitOfWorkModel>(
                 builder: (context, child, model) {
                   return model.isLoading ? Center(child:CircularProgressIndicator()):
@@ -98,7 +110,8 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                           _formData.title,
                            _formData.description,
                             _formData.imageUrl, 
-                            _formData.price
+                            _formData.price, 
+                            _formData.location
                             ).then((bool isSuccess) {
                               if(!isSuccess){
                                 showDialog(context: context, builder: (BuildContext context){
@@ -122,7 +135,8 @@ class _EditAlbumPageState extends State<EditAlbumPage> {
                           _formData.title,
                            _formData.description,
                             _formData.imageUrl,
-                           _formData.price
+                           _formData.price,
+                           _formData.location
                         ).then((bool isSuccess) {
                               if(!isSuccess){
                                 showDialog(context: context, builder: (BuildContext context){

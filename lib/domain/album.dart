@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_course/domain/locationData.dart';
 
 class Album {
 
@@ -12,7 +13,8 @@ class Album {
       this.price, 
       this.isFavorite = false,
       this.userEmail,
-      this.userId
+      this.userId,
+      this.location
       }
     );
 
@@ -21,6 +23,7 @@ class Album {
   String title;
   String imageUrl;
   String description;
+  LocationData location;
   double price;
   bool isFavorite;
   final String userEmail;

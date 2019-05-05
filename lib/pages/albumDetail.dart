@@ -1,12 +1,9 @@
 import 'dart:async';
-
+import 'package:map_view/map_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_course/domain/album.dart';
-import 'package:scoped_model/scoped_model.dart';
-
 import 'package:flutter_course/widgets/priceTag.dart';
 
-import '../scopedModels/unitOfWork.dart';
 
 class AlbumDetailPage extends StatelessWidget {
 
@@ -34,6 +31,29 @@ class AlbumDetailPage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _showMap() {
+    final List<Marker> markers = <Marker>[
+      Marker('position', 'Position', album.location.latitude, album.location.longitude)
+    ];
+    final cameraPosition = CameraPosition(Location(album.location.latitude, album.location.longitude), 14.0);
+    final mapView = MapView();
+    mapView.show(
+        MapOptions(initialCameraPosition: cameraPosition,
+            mapViewType: MapViewType.normal,
+            title: "Album Location"),
+            toolbarActions: [ToolbarAction('Close', 1)]
+    );
+    mapView.onToolbarAction.listen((int id) {
+      if(id == 1){
+        mapView.dismiss();
+      }
+    });
+
+    mapView.onMapReady.listen((_){
+      mapView.setMarkers(markers);
+    });
   }
 
   @override
@@ -75,7 +95,12 @@ class AlbumDetailPage extends StatelessWidget {
                         Text(album.title),
                         Text(album.description),
                         PriceTag(album.price.toString()),
-                        Text(album.userEmail)
+                        Text(album.userEmail),
+
+                        GestureDetector(child: Text(album.location.address,
+                          style: TextStyle(fontFamily: 'Oswald', color: Colors.grey),
+                        ),
+                        onTap: _showMap),
                         ],
                     )),
               ],

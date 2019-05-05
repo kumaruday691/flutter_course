@@ -20,7 +20,7 @@ class _ListAlbumPageState extends State<ListAlbumPage> {
 
   @override
   void initState() {
-    widget.model.fetchAlbums().then((bool isSuccess) {
+    widget.model.fetchAlbums(onlyForUser: true).then((bool isSuccess) {
                               if(!isSuccess){
                                 showDialog(context: context, builder: (BuildContext context){
                                   return AlertDialog(title: Text('Could not complete request'),
@@ -50,7 +50,7 @@ class _ListAlbumPageState extends State<ListAlbumPage> {
                 model.selectAlbum(model.allAlbums[index].id);
                 model.deleteAlbum();
               } else if (direction == DismissDirection.startToEnd) {
-                takeToEditScreen(context, index);
+                takeToEditScreen(context, index, model);
               }
             },
             child: Column(
@@ -65,7 +65,7 @@ class _ListAlbumPageState extends State<ListAlbumPage> {
                       icon: Icon(Icons.edit),
                       onPressed: () {
                         model.selectAlbum(model.allAlbums[index].id);
-                        takeToEditScreen(context, index);
+                        takeToEditScreen(context, index, model);
                       },
                     )),
                 Divider(),
@@ -78,9 +78,11 @@ class _ListAlbumPageState extends State<ListAlbumPage> {
     });
   }
 
-  void takeToEditScreen(BuildContext context, int index) {
+  void takeToEditScreen(BuildContext context, int index, UnitOfWorkModel model) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return EditAlbumPage();
-    }));
+    })).then((_){
+      model.selectAlbum(null);
+    });
   }
 }
